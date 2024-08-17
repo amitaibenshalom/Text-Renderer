@@ -16,9 +16,44 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Text Editor")
 
 
+def render_text(surface, text, show_control_lines):
+    """
+    Draw the text on the screen
+    :param text: list of Bezier curves representing the text
+    """
+    for letter in text:
+
+        if letter is None:
+            continue
+        
+        for curve in letter:
+            curve.draw(surface, show_control_lines)
+
+
+def render_config(surface, color, width):
+    """
+    Draw the configuration on the screen
+    :param color: tuple of RGB values for the color
+    :param width: int representing the width of the curve
+    """
+    # font = pygame.font.Font(None, 36)
+    # text = font.render(f"Color: {color}, Width: {width}", 1, BLACK)
+    # textpos = text.get_rect()
+    # textpos.centerx = surface.get_rect().centerx
+    # surface.blit(text, textpos)
+    pygame.draw.rect(surface, color, (10, 10, 20, 20))
+
+
+def render_cursor(surface, pos):
+    """
+    Draw the cursor on the screen
+    :param pos: tuple of x, y coordinates for the cursor
+    """
+    pygame.draw.line(surface, CURSOR_COLOR, pos, (pos[0], pos[1] + 30), CURSOR_WIDTH)
+
 def main():
     
-    curser_pos = (0, 0)
+    curser_pos = CURSOR_START
     color = DEFAULT_COLOR
     width = DEFAULT_WIDTH
     show_control_lines = False
@@ -42,7 +77,7 @@ def main():
                 
                 elif event.key == CLEAR:
                     text.clear()
-                    curser_pos = (0, 0)
+                    curser_pos = CURSOR_START
 
                 elif event.key == DELETE_LAST:
                     if text:
@@ -63,6 +98,15 @@ def main():
 
                 else:
                     # add the letter to the text
+                    if event.key == pygame.K_SPACE:
+                        curser_pos = (curser_pos[0] + CURSOR_JUMP[0], curser_pos[1])
+                        text.append(None)
+                        continue
+
+                    if event.key == pygame.K_RETURN:
+                        curser_pos = (CURSOR_START[0], curser_pos[1] + CURSOR_JUMP[1])
+                        continue
+
                     if event.unicode.isalpha():
                         print(event.unicode)
                         raw_letter = ENCODED_LETTERS[LETTERS.index(event.unicode.upper())]  # only the control points of the letter
@@ -72,16 +116,14 @@ def main():
                             letter.append(BezierCurve(*curve, color, width) + curser_pos)
 
                         text.append(letter)
-                        curser_pos = (curser_pos[0] + 20, curser_pos[1])
+                        curser_pos = (curser_pos[0] + CURSOR_JUMP[0], curser_pos[1])
                         
 
-        # clear the screen
+        # render text
         screen.fill(BACKGROUND_COLOR)
-
-        # render the text
-        for letter in text:
-            for curve in letter:
-                curve.draw(screen, show_control_lines)
+        render_config(screen, color, width)
+        render_text(screen, text, show_control_lines)
+        render_cursor(screen, curser_pos)
 
         pygame.display.flip()
         time.sleep(0.1)
