@@ -23,7 +23,7 @@ def render_text(surface, text, show_control_lines):
     """
     for letter in text:
 
-        if letter is None:
+        if not isinstance(letter, list):
             continue
         
         for curve in letter:
@@ -81,9 +81,17 @@ def main():
 
                 elif event.key == DELETE_LAST:
                     if text:
-                        text.pop()
-                        curser_pos = (curser_pos[0] - 20, curser_pos[1])
+                        if text[-1] == NEW_LINE:
+                            curser_pos = (CURSOR_START[0], curser_pos[1] - CURSOR_JUMP[1])
+
+                        else:
+                            curser_pos = (curser_pos[0] - CURSOR_JUMP[0], curser_pos[1])
                         
+                        text.pop()
+                    
+                    else:
+                        curser_pos = CURSOR_START
+
                 elif event.key == TOGGLE_CONTROL_LINES:
                     show_control_lines = not show_control_lines
 
@@ -98,17 +106,18 @@ def main():
 
                 else:
                     # add the letter to the text
-                    if event.key == pygame.K_SPACE:
+                    if event.key == SPACE:
                         curser_pos = (curser_pos[0] + CURSOR_JUMP[0], curser_pos[1])
-                        text.append(None)
+                        text.append(SPACE)
                         continue
 
-                    if event.key == pygame.K_RETURN:
+                    if event.key == NEW_LINE:
                         curser_pos = (CURSOR_START[0], curser_pos[1] + CURSOR_JUMP[1])
+                        text.append(NEW_LINE)
                         continue
 
                     if event.unicode.isalpha():
-                        print(event.unicode)
+                        # print(event.unicode)
                         raw_letter = ENCODED_LETTERS[LETTERS.index(event.unicode.upper())]  # only the control points of the letter
                         letter = []  # list of Bezier curves for the letter to be rendered
                         
