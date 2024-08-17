@@ -2,6 +2,8 @@
 Filename: bezierCurve.py
 Author: Amitai Ben Shalom
 Description: Object representing a Bezier curve
+Each letter in the alphabet is represented by one (or more) Bezier curve(s). The user can "insert" a letter by pressing the keyboard.
+When the user presses a key, the corresponding letter is drawn on the screen.
 """
 
 from consts import *
@@ -25,6 +27,92 @@ class BezierCurve(object):
         self.vertices = [p0, p1, p2, p3]
         self.color = color
         self.width = width
+
+    def __add__(self, other):
+        """
+        Add two Bezier curves
+        :param other: BezierCurve object to add
+        :return: BezierCurve object representing the sum of the two curves
+        """
+
+        # check for valid input
+        if isinstance(other, BezierCurve):
+
+            # add the control points of the two curves
+            new_p0 = (self.vertices[0][0] + other.vertices[0][0], self.vertices[0][1] + other.vertices[0][1])
+            new_p1 = (self.vertices[1][0] + other.vertices[1][0], self.vertices[1][1] + other.vertices[1][1])
+            new_p2 = (self.vertices[2][0] + other.vertices[2][0], self.vertices[2][1] + other.vertices[2][1])
+            new_p3 = (self.vertices[3][0] + other.vertices[3][0], self.vertices[3][1] + other.vertices[3][1])
+
+            return BezierCurve(new_p0, new_p1, new_p2, new_p3, self.color, self.width)
+        
+        if isinstance(other, tuple) or isinstance(other, list):
+
+            if len(other) != 2:
+                return None
+            
+            # add the tuple to each control point
+            new_p0 = (self.vertices[0][0] + other[0], self.vertices[0][1] + other[1])
+            new_p1 = (self.vertices[1][0] + other[0], self.vertices[1][1] + other[1])
+            new_p2 = (self.vertices[2][0] + other[0], self.vertices[2][1] + other[1])
+            new_p3 = (self.vertices[3][0] + other[0], self.vertices[3][1] + other[1])
+
+            return BezierCurve(new_p0, new_p1, new_p2, new_p3, self.color, self.width)
+        
+        return None
+    
+    def __sub__(self, other):
+        """
+        Subtract two Bezier curves
+        :param other: BezierCurve object to subtract
+        :return: BezierCurve object representing the difference of the two curves
+        """
+
+        # check for valid input
+        if isinstance(other, BezierCurve):
+
+            # subtract the control points of the two curves
+            new_p0 = (self.vertices[0][0] - other.vertices[0][0], self.vertices[0][1] - other.vertices[0][1])
+            new_p1 = (self.vertices[1][0] - other.vertices[1][0], self.vertices[1][1] - other.vertices[1][1])
+            new_p2 = (self.vertices[2][0] - other.vertices[2][0], self.vertices[2][1] - other.vertices[2][1])
+            new_p3 = (self.vertices[3][0] - other.vertices[3][0], self.vertices[3][1] - other.vertices[3][1])
+
+            return BezierCurve(new_p0, new_p1, new_p2, new_p3, self.color, self.width)
+        
+        if isinstance(other, tuple):
+
+            if len(other) != 2:
+                return None
+            
+            # subtract the tuple from each control point
+            new_p0 = (self.vertices[0][0] - other[0], self.vertices[0][1] - other[1])
+            new_p1 = (self.vertices[1][0] - other[0], self.vertices[1][1] - other[1])
+            new_p2 = (self.vertices[2][0] - other[0], self.vertices[2][1] - other[1])
+            new_p3 = (self.vertices[3][0] - other[0], self.vertices[3][1] - other[1])
+
+            return BezierCurve(new_p0, new_p1, new_p2, new_p3, self.color, self.width)
+        
+        return None
+    
+    def __mul__(self, other):
+        """
+        Multiply by a scalar
+        :param other: scalar to multiply by
+        :return: BezierCurve object representing the product of the curve and the scalar
+        """
+
+        # check for valid input
+        if isinstance(other, (int, float)):
+
+            # multiply each control point by the scalar
+            new_p0 = (self.vertices[0][0] * other, self.vertices[0][1] * other)
+            new_p1 = (self.vertices[1][0] * other, self.vertices[1][1] * other)
+            new_p2 = (self.vertices[2][0] * other, self.vertices[2][1] * other)
+            new_p3 = (self.vertices[3][0] * other, self.vertices[3][1] * other)
+
+            return BezierCurve(new_p0, new_p1, new_p2, new_p3, self.color, self.width)
+        
+        return None
 
     def compute_bezier_points(self, num_points=NUM_POINTS):
         """
