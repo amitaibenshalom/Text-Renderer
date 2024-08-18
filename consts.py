@@ -5,7 +5,6 @@ Constants file for the project
 import pygame
 from pygame.locals import *
 from letters_bezier_encoding import *
-from enum import Enum
 
 # colors
 WHITE = (255, 255, 255)
@@ -42,16 +41,13 @@ NUM_POINTS = 30
 CONTROL_LINE_COLOR = GRAY
 CONTROL_LINE_WIDTH = 1
 
+# keyboard
 QUIT = pygame.K_ESCAPE
-CLEAR = pygame.K_0
+CLEAR = pygame.K_c
 DELETE_LAST = pygame.K_BACKSPACE
-TOGGLE_CONTROL_LINES = pygame.K_9
-CHANGE_COLOR = pygame.K_8
-INCREASE_WIDTH = pygame.K_7
-DECREASE_WIDTH = pygame.K_6
-
-NEW_LINE = pygame.K_RETURN
-SPACE = pygame.K_SPACE
-DOT = pygame.K_PERIOD
-QUESTION_MARK = 47
-EXCLAMATION_MARK = 49
+TOGGLE_CONTROL_LINES = pygame.K_l
+CHANGE_COLOR = pygame.K_k
+# INCREASE_WIDTH = pygame.K_7
+# DECREASE_WIDTH = pygame.K_6
+INCREASE_SIZE = pygame.K_EQUALS
+DECREASE_SIZE = pygame.K_MINUS
