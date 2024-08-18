@@ -22,12 +22,10 @@ def handle_key_press(key, curser_pos, curser_jump, text, color, width, size_fact
     if key == SPACE:
         curser_pos = (curser_pos[0] + curser_jump[0], curser_pos[1])
         text.append(SPACE)
-        return
 
     if key == NEW_LINE:
         curser_pos = (CURSOR_START[0], curser_pos[1] + curser_jump[1])
         text.append(NEW_LINE)
-        return
 
     if key == DOT:
         raw_letter = ENCODED_LETTERS[LETTERS.index(".")]
@@ -38,7 +36,6 @@ def handle_key_press(key, curser_pos, curser_jump, text, color, width, size_fact
 
         text.append(letter)
         curser_pos = (curser_pos[0] + curser_jump[0], curser_pos[1])
-        return
 
     if key == QUESTION_MARK:
         raw_letter = ENCODED_LETTERS[LETTERS.index("?")]
@@ -49,7 +46,6 @@ def handle_key_press(key, curser_pos, curser_jump, text, color, width, size_fact
 
         text.append(letter)
         curser_pos = (curser_pos[0] + curser_jump[0], curser_pos[1])
-        return
 
     if key == EXCLAMATION_MARK:
         raw_letter = ENCODED_LETTERS[LETTERS.index("!")]
@@ -60,10 +56,13 @@ def handle_key_press(key, curser_pos, curser_jump, text, color, width, size_fact
 
         text.append(letter)
         curser_pos = (curser_pos[0] + curser_jump[0], curser_pos[1])
-        return
+    
+    try:
+        key = chr(key)
+    except:
+        return curser_pos
 
     if key.isalpha():
-        # print(event.unicode)
         raw_letter = ENCODED_LETTERS[LETTERS.index(key.upper())]  # only the control points of the letter
         letter = []  # list of Bezier curves for the letter to be rendered
         
@@ -72,3 +71,5 @@ def handle_key_press(key, curser_pos, curser_jump, text, color, width, size_fact
 
         text.append(letter)
         curser_pos = (curser_pos[0] + curser_jump[0], curser_pos[1])
+
+    return curser_pos

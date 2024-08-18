@@ -115,7 +115,7 @@ def main():
                     # add the letter to the text
 
                     # print(event.key)
-                    handle_key_press(event.key, text, curser_pos, curser_jump, size_factor)
+                    curser_pos = handle_key_press(event.key, curser_pos, curser_jump, text, color, width, size_factor)
                         
 
         # render text
