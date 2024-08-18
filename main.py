@@ -7,6 +7,7 @@ Description: Main file for the project - run me!
 import time
 from consts import *
 from bezierCurve import BezierCurve
+from handle_keyboard import handle_key_press
 
 # initialize pygame
 pygame.init()
@@ -113,61 +114,8 @@ def main():
                 else:
                     # add the letter to the text
 
-                    print(event.key)
-
-                    if event.key == SPACE:
-                        curser_pos = (curser_pos[0] + curser_jump[0], curser_pos[1])
-                        text.append(SPACE)
-                        continue
-
-                    if event.key == NEW_LINE:
-                        curser_pos = (CURSOR_START[0], curser_pos[1] + curser_jump[1])
-                        text.append(NEW_LINE)
-                        continue
-
-                    if event.key == pygame.K_PERIOD:
-                        raw_letter = ENCODED_LETTERS[LETTERS.index(".")]
-                        letter = []
-
-                        for curve in raw_letter:
-                            letter.append(BezierCurve(*curve, color, width) * size_factor + curser_pos)
-
-                        text.append(letter)
-                        curser_pos = (curser_pos[0] + curser_jump[0], curser_pos[1])
-                        continue
-
-                    if event.key == 47:
-                        raw_letter = ENCODED_LETTERS[LETTERS.index("?")]
-                        letter = []
-
-                        for curve in raw_letter:
-                            letter.append(BezierCurve(*curve, color, width) * size_factor + curser_pos)
-
-                        text.append(letter)
-                        curser_pos = (curser_pos[0] + curser_jump[0], curser_pos[1])
-                        continue
-
-                    if event.key == 49:
-                        raw_letter = ENCODED_LETTERS[LETTERS.index("!")]
-                        letter = []
-
-                        for curve in raw_letter:
-                            letter.append(BezierCurve(*curve, color, width) * size_factor + curser_pos)
-
-                        text.append(letter)
-                        curser_pos = (curser_pos[0] + curser_jump[0], curser_pos[1])
-                        continue
-
-                    if event.unicode.isalpha():
-                        # print(event.unicode)
-                        raw_letter = ENCODED_LETTERS[LETTERS.index(event.unicode.upper())]  # only the control points of the letter
-                        letter = []  # list of Bezier curves for the letter to be rendered
-                        
-                        for curve in raw_letter:
-                            letter.append(BezierCurve(*curve, color, width) * size_factor + curser_pos)
-
-                        text.append(letter)
-                        curser_pos = (curser_pos[0] + curser_jump[0], curser_pos[1])
+                    # print(event.key)
+                    handle_key_press(event.key, text, curser_pos, curser_jump, size_factor)
                         
 
         # render text
