@@ -45,12 +45,34 @@ def render_config(surface, color, width):
     pygame.draw.rect(surface, color, (10, 10, 20, 20))
 
 
-def render_cursor(surface, pos, size_factor):
+def static_vars(**kwargs):
+    """
+    Decorator to add static variables to a function
+    :param kwargs: dictionary of static variables to add to the function
+    """
+    def decorate(func):
+        for k in kwargs:
+            setattr(func, k, kwargs[k])
+        return func
+    return decorate
+
+
+@static_vars(last_blink=time.time())
+def render_cursor(surface, pos, size_factor, CURSOR_BLINK_TIME=0.5):
     """
     Draw the cursor on the screen
     :param pos: tuple of x, y coordinates for the cursor
     """
-    pygame.draw.line(surface, CURSOR_COLOR, pos, (pos[0], pos[1] + CURSOR_LENGTH * size_factor), CURSOR_WIDTH)
+    if time.time() - render_cursor.last_blink < CURSOR_BLINK_TIME:
+        pygame.draw.line(surface, CURSOR_COLOR, pos, (pos[0], pos[1] + CURSOR_LENGTH * size_factor), CURSOR_WIDTH)
+
+    elif time.time() - render_cursor.last_blink < 2 * CURSOR_BLINK_TIME:
+        pygame.draw.line(surface, BACKGROUND_COLOR, pos, (pos[0], pos[1] + CURSOR_LENGTH * size_factor), CURSOR_WIDTH)
+
+    else:
+        render_cursor.last_blink = time.time()
+        pygame.draw.line(surface, BACKGROUND_COLOR, pos, (pos[0], pos[1] + CURSOR_LENGTH * size_factor), CURSOR_WIDTH)
+
 
 def main():
     
@@ -112,8 +134,6 @@ def main():
                     curser_jump = (CURSOR_JUMP[0] * size_factor, CURSOR_JUMP[1] * size_factor)
 
                 else:
-                    # add the letter to the text
-
                     # print(event.key)
                     curser_pos = handle_key_press(event.key, curser_pos, curser_jump, text, color, width, size_factor)
                         
