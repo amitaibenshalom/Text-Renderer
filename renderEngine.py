@@ -19,6 +19,7 @@ class RenderEngine(object):
         """
         Initialize the render engine
         """
+        # global SIZE_FACTOR_STEP
         pygame.init()
         pygame.display.set_caption("Text Editor")
 
@@ -109,13 +110,15 @@ class RenderEngine(object):
 
         # check if + was pressed
         if key == INCREASE_SIZE:
-            self.size_factor += 0.2
+            self.size_factor += SIZE_FACTOR_STEP if self.size_factor < MAX_SIZE_FACTOR else 0
+            self.width = int(DEFAULT_WIDTH * self.size_factor)
             self.cursor.scale(self.size_factor)
             return
 
         # check if - was pressed
         if key == DECREASE_SIZE:
-            self.size_factor -= 0.2 if self.size_factor > 0.5 else 0
+            self.size_factor -= SIZE_FACTOR_STEP if self.size_factor > MIN_SIZE_FACTOR else 0
+            self.width = int(DEFAULT_WIDTH * self.size_factor)
             self.cursor.scale(self.size_factor)
             return
 
@@ -164,8 +167,9 @@ class RenderEngine(object):
         try:
             key = chr(key)
         except:
-            return
+            return  # ignore non-letter keys
 
+        # check if the key is a regular letter
         if not ctrl and key.isalpha():
             raw_letter = ENCODED_LETTERS[LETTERS.index(key.upper())]  # only the control points of the letter
             letter = []  # list of Bezier curves for the letter to be rendered

@@ -7,14 +7,12 @@ Description: Main file for the project - run me!
 import time
 from consts import *
 from renderEngine import RenderEngine
-# from handle_keyboard import handle_key_press
 
 
 def main():
     
     renderEngine = RenderEngine()
     
-    # curser_jump = (CURSOR_JUMP[0] * size_factor, CURSOR_JUMP[1] * size_factor)
     while True:
 
         for event in pygame.event.get():
