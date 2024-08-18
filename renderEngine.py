@@ -65,7 +65,6 @@ class RenderEngine(object):
         # draw lines under each row of letters
         for i in range(CURSOR_START[1] + CURSOR_JUMP[1], SCREEN_HEIGHT, CURSOR_JUMP[1]):
             pygame.draw.line(self.screen, GRAY, (0, i - 5), (SCREEN_WIDTH, i - 5), 1)
-            
 
     def handle_key_press(self, key):
         """
@@ -139,6 +138,9 @@ class RenderEngine(object):
                 self.text.append(pygame.K_SPACE)
             return
 
+        if self.cursor.get_pos()[0] > SCREEN_WIDTH - self.cursor.jump[0]:
+            self.cursor.set_pos(CURSOR_START[0], self.cursor.get_pos()[1] + self.cursor.jump[1])
+
         # check if space was pressed
         if key == pygame.K_SPACE:
             self.cursor.move(self.cursor.jump[0], 0)
@@ -187,7 +189,7 @@ class RenderEngine(object):
             return  # ignore non-letter keys
 
         # check if the key is a regular letter
-        if not ctrl and key.isalpha():
+        if not ctrl and key.isalnum():
             raw_letter = ENCODED_LETTERS[LETTERS.index(key.upper())]  # only the control points of the letter
             letter = []  # list of Bezier curves for the letter to be rendered
             
