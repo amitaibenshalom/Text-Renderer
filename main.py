@@ -112,6 +112,9 @@ def main():
 
                 else:
                     # add the letter to the text
+
+                    print(event.key)
+
                     if event.key == SPACE:
                         curser_pos = (curser_pos[0] + curser_jump[0], curser_pos[1])
                         text.append(SPACE)
@@ -124,6 +127,28 @@ def main():
 
                     if event.key == pygame.K_PERIOD:
                         raw_letter = ENCODED_LETTERS[LETTERS.index(".")]
+                        letter = []
+
+                        for curve in raw_letter:
+                            letter.append(BezierCurve(*curve, color, width) * size_factor + curser_pos)
+
+                        text.append(letter)
+                        curser_pos = (curser_pos[0] + curser_jump[0], curser_pos[1])
+                        continue
+
+                    if event.key == 47:
+                        raw_letter = ENCODED_LETTERS[LETTERS.index("?")]
+                        letter = []
+
+                        for curve in raw_letter:
+                            letter.append(BezierCurve(*curve, color, width) * size_factor + curser_pos)
+
+                        text.append(letter)
+                        curser_pos = (curser_pos[0] + curser_jump[0], curser_pos[1])
+                        continue
+
+                    if event.key == 49:
+                        raw_letter = ENCODED_LETTERS[LETTERS.index("!")]
                         letter = []
 
                         for curve in raw_letter:

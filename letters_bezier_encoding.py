@@ -31,6 +31,8 @@ X = [[[0, 0], [20, 30], [0, 0], [20, 30]], [[0, 30], [20, 0], [0, 30], [20, 0]]]
 Y = [[[0, 0], [10, 20], [10, 20], [20, 0]], [[10, 15], [10, 30], [10, 15], [10, 30]]]
 Z = [[[0, 0], [55, 0], [-35, 30], [20, 30]]]
 DOT = [[[10, 30], [15, 30], [10, 25], [10, 30]]]
+QUESTION_MARK = [[[10, 20], [0, 10], [40, 0], [6, 0]], [[10, 30], [15, 30], [10, 25], [10, 30]]]
+EXCLAMATION_MARK = [[[10, 0], [10, 20], [10, 0], [10, 20]], [[10, 30], [15, 30], [10, 25], [10, 30]]]
 
-LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ."
-ENCODED_LETTERS = [A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z, DOT]
+LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ.?!"
+ENCODED_LETTERS = [A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z, DOT, QUESTION_MARK, EXCLAMATION_MARK]
