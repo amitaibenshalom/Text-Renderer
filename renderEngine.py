@@ -53,7 +53,19 @@ class RenderEngine(object):
         """
         Draw the configuration on the screen (currently only the color)
         """
-        pygame.draw.rect(self.screen, self.color, (10, 10, 20, 20))
+        color_box_pos = (10, 10)
+        color_box_size = (20, 20)
+
+        # draw the color box
+        pygame.draw.rect(self.screen, self.color, (color_box_pos, color_box_size))
+
+        # draw lines to separate the color from the rest of the screen
+        # pygame.draw.line(self.screen, BLACK, (0, color_box_pos[1] + color_box_size[1] + 10), (SCREEN_WIDTH, color_box_pos[1] + color_box_size[1] + 10), 2)
+        
+        # draw lines under each row of letters
+        for i in range(CURSOR_START[1] + CURSOR_JUMP[1], SCREEN_HEIGHT, CURSOR_JUMP[1]):
+            pygame.draw.line(self.screen, GRAY, (0, i - 5), (SCREEN_WIDTH, i - 5), 1)
+            
 
     def handle_key_press(self, key):
         """
@@ -70,14 +82,6 @@ class RenderEngine(object):
         # check if ctrl is pressed
         if pressed[pygame.K_LCTRL] or pressed[pygame.K_RCTRL]:
             ctrl = True
-
-        # key = change_to_shifted_key(key, pressed)  # change the key to the shifted key if needed
-
-        # check if space was pressed
-        if key == pygame.K_SPACE:
-            self.cursor.move(self.cursor.jump[0], 0)
-            self.text.append(pygame.K_SPACE)
-            return
 
         # check if ctrl + c was pressed
         if key == CLEAR and ctrl:
@@ -108,15 +112,15 @@ class RenderEngine(object):
             self.color = COLORS[(COLORS.index(self.color) + 1) % len(COLORS)]
             return
 
-        # check if + was pressed
-        if key == INCREASE_SIZE:
+        # check if cntrl + + was pressed
+        if key == INCREASE_SIZE and ctrl:
             self.size_factor += SIZE_FACTOR_STEP if self.size_factor < MAX_SIZE_FACTOR else 0
             self.width = int(DEFAULT_WIDTH * self.size_factor)
             self.cursor.scale(self.size_factor)
             return
 
-        # check if - was pressed
-        if key == DECREASE_SIZE:
+        # check if cntrl + - was pressed
+        if key == DECREASE_SIZE and ctrl:
             self.size_factor -= SIZE_FACTOR_STEP if self.size_factor > MIN_SIZE_FACTOR else 0
             self.width = int(DEFAULT_WIDTH * self.size_factor)
             self.cursor.scale(self.size_factor)
@@ -126,6 +130,19 @@ class RenderEngine(object):
         if key == pygame.K_RETURN:
             self.cursor.set_pos(CURSOR_START[0], self.cursor.get_pos()[1] + self.cursor.jump[1])
             self.text.append(pygame.K_RETURN)
+            return
+        
+        # check if tab was pressed
+        if key == pygame.K_TAB:
+            self.cursor.move(self.cursor.jump[0] * TAB_SIZE, 0)
+            for i in range(TAB_SIZE):
+                self.text.append(pygame.K_SPACE)
+            return
+
+        # check if space was pressed
+        if key == pygame.K_SPACE:
+            self.cursor.move(self.cursor.jump[0], 0)
+            self.text.append(pygame.K_SPACE)
             return
 
         # check if period was pressed
