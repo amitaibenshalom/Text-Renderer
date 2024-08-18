@@ -88,7 +88,7 @@ class RenderEngine(object):
         if key == DELETE_LAST:
             if self.text:
                 if self.text[-1] == pygame.K_RETURN:
-                    self.cursor.set_pos(CURSOR_START[0], self.cursor.get_pos[1] - self.cursor.jump[1])
+                    self.cursor.set_pos(CURSOR_START[0], self.cursor.get_pos()[1] - self.cursor.jump[1])
                 else:
                     self.cursor.move(-self.cursor.jump[0], 0)
                 self.text.pop()
@@ -121,7 +121,7 @@ class RenderEngine(object):
 
         # check if enter was pressed
         if key == pygame.K_RETURN:
-            self.cursor.set_pos(CURSOR_START[0], self.cursor.pos[1] + self.cursor.jump[1])
+            self.cursor.set_pos(CURSOR_START[0], self.cursor.get_pos()[1] + self.cursor.jump[1])
             self.text.append(pygame.K_RETURN)
             return
 

@@ -63,7 +63,7 @@ class Cursor(object):
         Get the cursor position
         :return: tuple of x, y coordinates for the cursor
         """
-        return self.pos
+        return (self.pos[0], self.pos[1])
 
 
     def render_cursor(self, surface, size_factor, CURSOR_BLINK_TIME=0.5):
@@ -72,11 +72,11 @@ class Cursor(object):
         :param pos: tuple of x, y coordinates for the cursor
         """
         if time.time() - self.last_blink < CURSOR_BLINK_TIME:
-            pygame.draw.line(surface, self.color, self.pos, (self.pos[0], self.pos[1] + self.length * size_factor), self.width)
+            pygame.draw.line(surface, self.color, self.pos, (self.pos[0], self.pos[1] + self.length), self.width)
 
         elif time.time() - self.last_blink < 2 * CURSOR_BLINK_TIME:
-            pygame.draw.line(surface, BACKGROUND_COLOR, self.pos, (self.pos[0], self.pos[1] + self.length * size_factor), self.width)
+            pygame.draw.line(surface, BACKGROUND_COLOR, self.pos, (self.pos[0], self.pos[1] + self.length), self.width)
 
         else:
             self.last_blink = time.time()
-            pygame.draw.line(surface, BACKGROUND_COLOR, self.pos, (self.pos[0], self.pos[1] + self.length * size_factor), self.width)
+            pygame.draw.line(surface, BACKGROUND_COLOR, self.pos, (self.pos[0], self.pos[1] + self.length), self.width)
