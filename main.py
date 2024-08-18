@@ -44,18 +44,20 @@ def render_config(surface, color, width):
     pygame.draw.rect(surface, color, (10, 10, 20, 20))
 
 
-def render_cursor(surface, pos):
+def render_cursor(surface, pos, size_factor):
     """
     Draw the cursor on the screen
     :param pos: tuple of x, y coordinates for the cursor
     """
-    pygame.draw.line(surface, CURSOR_COLOR, pos, (pos[0], pos[1] + 30), CURSOR_WIDTH)
+    pygame.draw.line(surface, CURSOR_COLOR, pos, (pos[0], pos[1] + CURSOR_LENGTH * size_factor), CURSOR_WIDTH)
 
 def main():
     
     curser_pos = CURSOR_START
     color = DEFAULT_COLOR
     width = DEFAULT_WIDTH
+    size_factor = DEFAULT_SIZE_FACTOR
+    curser_jump = (CURSOR_JUMP[0] * size_factor, CURSOR_JUMP[1] * size_factor)
     show_control_lines = False
 
     # list (of bezier curves) to store the letters
@@ -82,10 +84,10 @@ def main():
                 elif event.key == DELETE_LAST:
                     if text:
                         if text[-1] == NEW_LINE:
-                            curser_pos = (CURSOR_START[0], curser_pos[1] - CURSOR_JUMP[1])
+                            curser_pos = (CURSOR_START[0], curser_pos[1] - curser_jump[1])
 
                         else:
-                            curser_pos = (curser_pos[0] - CURSOR_JUMP[0], curser_pos[1])
+                            curser_pos = (curser_pos[0] - curser_jump[0], curser_pos[1])
                         
                         text.pop()
                     
@@ -99,21 +101,36 @@ def main():
                     color = COLORS[COLORS.index(color) + 1] if COLORS.index(color) + 1 < len(COLORS) else COLORS[0]
 
                 elif event.key == INCREASE_WIDTH:
-                    width += 1
+                    # width += 1
+                    size_factor += 0.1
+                    curser_jump = (CURSOR_JUMP[0] * size_factor, CURSOR_JUMP[1] * size_factor)
 
                 elif event.key == DECREASE_WIDTH:
-                    width -= 1 if width > 1 else 0
+                    # width -= 1 if width > 1 else 0
+                    size_factor -= 0.1 if size_factor > 0.1 else 0
+                    curser_jump = (CURSOR_JUMP[0] * size_factor, CURSOR_JUMP[1] * size_factor)
 
                 else:
                     # add the letter to the text
                     if event.key == SPACE:
-                        curser_pos = (curser_pos[0] + CURSOR_JUMP[0], curser_pos[1])
+                        curser_pos = (curser_pos[0] + curser_jump[0], curser_pos[1])
                         text.append(SPACE)
                         continue
 
                     if event.key == NEW_LINE:
-                        curser_pos = (CURSOR_START[0], curser_pos[1] + CURSOR_JUMP[1])
+                        curser_pos = (CURSOR_START[0], curser_pos[1] + curser_jump[1])
                         text.append(NEW_LINE)
+                        continue
+
+                    if event.key == pygame.K_PERIOD:
+                        raw_letter = ENCODED_LETTERS[LETTERS.index(".")]
+                        letter = []
+
+                        for curve in raw_letter:
+                            letter.append(BezierCurve(*curve, color, width) * size_factor + curser_pos)
+
+                        text.append(letter)
+                        curser_pos = (curser_pos[0] + curser_jump[0], curser_pos[1])
                         continue
 
                     if event.unicode.isalpha():
@@ -122,17 +139,17 @@ def main():
                         letter = []  # list of Bezier curves for the letter to be rendered
                         
                         for curve in raw_letter:
-                            letter.append(BezierCurve(*curve, color, width) + curser_pos)
+                            letter.append(BezierCurve(*curve, color, width) * size_factor + curser_pos)
 
                         text.append(letter)
-                        curser_pos = (curser_pos[0] + CURSOR_JUMP[0], curser_pos[1])
+                        curser_pos = (curser_pos[0] + curser_jump[0], curser_pos[1])
                         
 
         # render text
         screen.fill(BACKGROUND_COLOR)
         render_config(screen, color, width)
         render_text(screen, text, show_control_lines)
-        render_cursor(screen, curser_pos)
+        render_cursor(screen, curser_pos, size_factor)
 
         pygame.display.flip()
         time.sleep(0.1)
