@@ -58,6 +58,7 @@ GREATER_THAN = [[[5, 5], [15, 15], [15, 15], [5, 25]]]
 ASTERISK = [[[10, 0], [10, 30], [10, 30], [10, 0]], [[0, 10], [20, 10], [10, 20], [10, 20]]]
 SLASH = [[[0, 30], [20, 0], [0, 30], [20, 0]]]
 BACKSLASH = [[[0, 0], [20, 30], [0, 0], [20, 30]]]
+VERTICAL_BAR = [[[10, 0], [10, 30], [10, 0], [10, 30]]]
 AT = [[[10, 30], [0, 30], [0, 0], [10, 0]], [[10, 0], [20, 0], [20, 30], [10, 30]], [[10, 15], [20, 15], [20, 15], [10, 15]]]
 HASHTAG = [[[0, 0], [20, 0], [0, 30], [20, 30]], [[0, 10], [20, 10], [0, 20], [20, 20]]]
 DOLLAR = [[[10, 0], [10, 30], [10, 0], [10, 30]], [[0, 0], [20, 0], [0, 0], [20, 0]], [[0, 30], [20, 30], [0, 30], [20, 30]]]
@@ -65,9 +66,8 @@ PERCENT = [[[0, 0], [20, 30], [0, 0], [20, 30]], [[0, 0], [20, 0], [20, 30], [0,
 CARET = [[[0, 10], [10, 30], [0, 10], [10, 30]]]
 AMPERSAND = [[[20, 30], [0, 30], [0, 0], [20, 0]], [[0, 15], [20, 15], [20, 30], [0, 30]]]
 STAR = [[[10, 0], [10, 30], [10, 30], [10, 0]], [[0, 10], [20, 10], [10, 20], [10, 20]]]
-
-LETTERS = r"ABCDEFGHIJKLMNOPQRSTUVWXYZ.?!1234567890(),:;-'_+=<>*\|@#$%&^"
+LETTERS = r"ABCDEFGHIJKLMNOPQRSTUVWXYZ.?!1234567890(),:;-'_+=<>*/\|@#$%&^"
 ENCODED_LETTERS = [A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z, DOT, QUESTION_MARK, EXCLAMATION_MARK
                    , ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, ZERO, OPEN_BRACKET, CLOSE_BRACKET, COMMA, COLON, SEMICOLON, DASH
-                   , QOUTE, UNDERSCORE, PLUS, EQUALS, LESS_THAN, GREATER_THAN, ASTERISK, SLASH, BACKSLASH, AT, HASHTAG, DOLLAR, PERCENT, CARET
+                   , QOUTE, UNDERSCORE, PLUS, EQUALS, LESS_THAN, GREATER_THAN, ASTERISK, SLASH, BACKSLASH, VERTICAL_BAR, AT, HASHTAG, DOLLAR, PERCENT, CARET
                    , AMPERSAND, STAR]
