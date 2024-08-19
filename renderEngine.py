@@ -66,6 +66,21 @@ class RenderEngine(object):
         for i in range(CURSOR_START[1] + CURSOR_JUMP[1], SCREEN_HEIGHT, CURSOR_JUMP[1]):
             pygame.draw.line(self.screen, GRAY, (0, i - 5), (SCREEN_WIDTH, i - 5), 1)
 
+    def get_last_line_length(self):
+        """
+        Get the length of the last line in the text
+        :return: int representing the length of the last line
+        """
+        length = 0
+
+        for letter in self.text:
+            if letter == pygame.K_RETURN:
+                length = 0
+            else:
+                length += 1
+
+        return length
+
     def change_to_shifted_key(key):
         """
         Change the key to the shifted key
@@ -105,12 +120,18 @@ class RenderEngine(object):
 
         # check if backspace was pressed
         if key == DELETE_LAST:
+            
             if self.text:
-                if self.text[-1] == pygame.K_RETURN:
-                    self.cursor.set_pos(CURSOR_START[0], self.cursor.get_pos()[1] - self.cursor.jump[1])
-                else:
-                    self.cursor.move(-self.cursor.jump[0], 0)
+                self.cursor.move(-self.cursor.jump[0], 0)
                 self.text.pop()
+                
+                if self.cursor.get_pos()[0] < CURSOR_START[0]:
+                    # there must have been a newline character before the cursor - THAT WE ALREADY REMOVED, now remove the actual letter
+                    if self.text and self.text[-1] != pygame.K_RETURN:  # if there are still letters in the text
+                        self.text.pop()
+
+                    self.cursor.set_pos(CURSOR_START[0] + self.get_last_line_length() * self.cursor.jump[0], self.cursor.get_pos()[1] - self.cursor.jump[1])
+                
             
             else:
                 self.cursor.reset()
@@ -153,13 +174,14 @@ class RenderEngine(object):
                 self.text.append(pygame.K_SPACE)
             return
 
-        if self.cursor.get_pos()[0] > SCREEN_WIDTH - self.cursor.jump[0]:
-            self.cursor.set_pos(CURSOR_START[0], self.cursor.get_pos()[1] + self.cursor.jump[1])
-
         # check if space was pressed
         if key == pygame.K_SPACE:
             self.cursor.move(self.cursor.jump[0], 0)
             self.text.append(pygame.K_SPACE)
+            
+            if self.cursor.get_pos()[0] > SCREEN_WIDTH:
+                self.cursor.set_pos(CURSOR_START[0], self.cursor.get_pos()[1] + self.cursor.jump[1])
+                self.text.append(pygame.K_RETURN)
             return
 
         # handle all other keys (letters, numbers, shifted versions, etc.)
@@ -180,3 +202,7 @@ class RenderEngine(object):
 
             self.text.append(letter)
             self.cursor.move(self.cursor.jump[0], 0)
+
+            if self.cursor.get_pos()[0] > SCREEN_WIDTH:
+                self.cursor.set_pos(CURSOR_START[0], self.cursor.get_pos()[1] + self.cursor.jump[1])
+                self.text.append(pygame.K_RETURN)
