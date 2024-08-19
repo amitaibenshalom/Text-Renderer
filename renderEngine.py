@@ -66,6 +66,21 @@ class RenderEngine(object):
         for i in range(CURSOR_START[1] + CURSOR_JUMP[1], SCREEN_HEIGHT, CURSOR_JUMP[1]):
             pygame.draw.line(self.screen, GRAY, (0, i - 5), (SCREEN_WIDTH, i - 5), 1)
 
+    def change_to_shifted_key(key):
+        """
+        Change the key to the shifted key
+        :param key: char representing the key that was pressed
+        :return: char representing the shifted key
+        """
+        non_shifted = r"`1234567890-=qwertyuiop[]\asdfghjkl;'zxcvbnm,./"
+        shifted = r'~!@#$%^&*()_+QWERTYUIOP{}|ASDFGHJKL:"ZXCVBNM<>?'
+        
+        # check if key is pressed with shift
+        if key in non_shifted:
+            key = shifted[non_shifted.index(key)]
+
+        return key
+
     def handle_key_press(self, key):
         """
         Handle a key press event
@@ -147,49 +162,16 @@ class RenderEngine(object):
             self.text.append(pygame.K_SPACE)
             return
 
-        # check if period was pressed
-        if key == pygame.K_PERIOD:
-            raw_letter = ENCODED_LETTERS[LETTERS.index(".")]
-            letter = []
-
-            for curve in raw_letter:
-                letter.append(BezierCurve(*curve, self.color, self.width) * self.size_factor + self.cursor.get_pos())
-
-            self.text.append(letter)
-            self.cursor.move(self.cursor.jump[0], 0)
-            return
-
-        # check if question mark was pressed
-        if shift and key == pygame.K_SLASH:
-            raw_letter = ENCODED_LETTERS[LETTERS.index("?")]
-            letter = []
-
-            for curve in raw_letter:
-                letter.append(BezierCurve(*curve, self.color, self.width) * self.size_factor + self.cursor.get_pos())
-
-            self.text.append(letter)
-            self.cursor.move(self.cursor.jump[0], 0)
-            return
-            
-        # check if exclamation mark was pressed
-        if shift and key == pygame.K_1:
-            raw_letter = ENCODED_LETTERS[LETTERS.index("!")]
-            letter = []
-
-            for curve in raw_letter:
-                letter.append(BezierCurve(*curve, self.color, self.width) * self.size_factor + self.cursor.get_pos())
-
-            self.text.append(letter)
-            self.cursor.move(self.cursor.jump[0], 0)
-            return
-        
+        # handle all other keys (letters, numbers, shifted versions, etc.)
         try:
             key = chr(key)
         except:
             return  # ignore non-letter keys
 
-        # check if the key is a regular letter
-        if not ctrl and key.isalnum():
+        if shift:
+            key = RenderEngine.change_to_shifted_key(key)
+
+        if not ctrl and key.upper() in LETTERS:
             raw_letter = ENCODED_LETTERS[LETTERS.index(key.upper())]  # only the control points of the letter
             letter = []  # list of Bezier curves for the letter to be rendered
             

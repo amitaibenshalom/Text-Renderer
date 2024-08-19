@@ -11,7 +11,7 @@ from renderEngine import RenderEngine
 
 def main():
     
-    renderEngine = RenderEngine()
+    renderEngine = RenderEngine()  # create a render engine object
     
     while True:
 
@@ -20,7 +20,7 @@ def main():
                 pygame.quit()
                 return
 
-            # handle keyboard input
+            # handle key press events
             if event.type == pygame.KEYDOWN:
 
                 if event.key == QUIT:
@@ -29,7 +29,7 @@ def main():
                 
                 renderEngine.handle_key_press(event.key)
 
-
+        # render everything
         renderEngine.screen.fill(BACKGROUND_COLOR)
         renderEngine.render_text()
         renderEngine.render_cursor()
