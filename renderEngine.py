@@ -168,6 +168,7 @@ class RenderEngine(object):
         # check if enter was pressed
         if key == pygame.K_RETURN:
             self.cursor.set_pos(CURSOR_START[0], self.cursor.get_pos()[1] + self.cursor.jump[1])
+            self.text.append(pygame.K_SPACE)
             self.text.append(pygame.K_RETURN)
             self.cursor.last_blink = time.time()  # reset the cursor blink timer
             return
