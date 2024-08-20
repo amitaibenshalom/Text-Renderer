@@ -66,14 +66,14 @@ class Cursor(object):
         return (self.pos[0], self.pos[1])
 
 
-    def render_cursor(self, surface, size_factor, CURSOR_BLINK_TIME=0.5):
+    def render_cursor(self, surface, CURSOR_BLINK_TIME=0.5):
         """
         Draw the cursor on the screen
         :param pos: tuple of x, y coordinates for the cursor
         """
         if time.time() - self.last_blink < CURSOR_BLINK_TIME:
             # render the cursor
-            pygame.draw.line(surface, self.color, self.pos, (self.pos[0], self.pos[1] + self.length), self.width)
+            pygame.draw.line(surface, self.color, (self.pos[0], self.pos[1]), (self.pos[0], self.pos[1] + self.length), self.width)
 
         elif time.time() - self.last_blink < 2 * CURSOR_BLINK_TIME:
             # do not render the cursor (for blinking effect)

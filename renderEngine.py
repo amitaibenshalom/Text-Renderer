@@ -4,6 +4,7 @@ Author: Amitai Ben Shalom
 Description: Object representing a render engine for the text editor
 """
 
+import time
 import pygame
 from consts import *
 from bezierCurve import BezierCurve
@@ -47,7 +48,7 @@ class RenderEngine(object):
         """
         Draw the cursor on the screen
         """
-        self.cursor.render_cursor(self.screen, self.size_factor)
+        self.cursor.render_cursor(self.screen)
 
     def render_config(self):
         """
@@ -63,8 +64,10 @@ class RenderEngine(object):
         # pygame.draw.line(self.screen, BLACK, (0, color_box_pos[1] + color_box_size[1] + 10), (SCREEN_WIDTH, color_box_pos[1] + color_box_size[1] + 10), 2)
         
         # draw lines under each row of letters
+        LINES_PADDING = 5
+
         for i in range(CURSOR_START[1] + CURSOR_JUMP[1], SCREEN_HEIGHT, CURSOR_JUMP[1]):
-            pygame.draw.line(self.screen, GRAY, (0, i - 5), (SCREEN_WIDTH, i - 5), 1)
+            pygame.draw.line(self.screen, GRAY, (0, i - LINES_PADDING), (SCREEN_WIDTH, i - LINES_PADDING), 1)
 
     def get_last_line_length(self):
         """
@@ -131,10 +134,11 @@ class RenderEngine(object):
                         self.text.pop()
 
                     self.cursor.set_pos(CURSOR_START[0] + self.get_last_line_length() * self.cursor.jump[0], self.cursor.get_pos()[1] - self.cursor.jump[1])
-                
-            
+
             else:
                 self.cursor.reset()
+
+            self.cursor.last_blink = time.time()  # reset the cursor blink timer
             return
 
         # check if cntrl + l was pressed
@@ -165,13 +169,17 @@ class RenderEngine(object):
         if key == pygame.K_RETURN:
             self.cursor.set_pos(CURSOR_START[0], self.cursor.get_pos()[1] + self.cursor.jump[1])
             self.text.append(pygame.K_RETURN)
+            self.cursor.last_blink = time.time()  # reset the cursor blink timer
             return
         
         # check if tab was pressed
         if key == pygame.K_TAB:
             self.cursor.move(self.cursor.jump[0] * TAB_SIZE, 0)
+
             for i in range(TAB_SIZE):
                 self.text.append(pygame.K_SPACE)
+
+            self.cursor.last_blink = time.time()  # reset the cursor blink timer
             return
 
         # check if space was pressed
@@ -182,6 +190,8 @@ class RenderEngine(object):
             if self.cursor.get_pos()[0] > SCREEN_WIDTH:
                 self.cursor.set_pos(CURSOR_START[0], self.cursor.get_pos()[1] + self.cursor.jump[1])
                 self.text.append(pygame.K_RETURN)
+
+            self.cursor.last_blink = time.time()  # reset the cursor blink timer
             return
 
         # handle all other keys (letters, numbers, shifted versions, etc.)
@@ -206,3 +216,5 @@ class RenderEngine(object):
             if self.cursor.get_pos()[0] > SCREEN_WIDTH:
                 self.cursor.set_pos(CURSOR_START[0], self.cursor.get_pos()[1] + self.cursor.jump[1])
                 self.text.append(pygame.K_RETURN)
+
+            self.cursor.last_blink = time.time()  # reset the cursor blink timer
