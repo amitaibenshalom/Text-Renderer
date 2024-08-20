@@ -1,6 +1,12 @@
 # Amitaipad++
 Text editor? (work in progress)
 
+```
+pip install -r requirements.txt
+python main.py
+```
+
+
 * press CTRL + C to clear screen 
 * press CTRL + K to change color
 * press CTRL + L to toggle bezier curve's lines
@@ -13,7 +19,3 @@ Text editor? (work in progress)
 
 HOW TO RUN:
 
-```
-pip install -r requirements.txt
-python main.py
-```
