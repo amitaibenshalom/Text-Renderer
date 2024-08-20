@@ -9,3 +9,11 @@ Text editor? (work in progress)
 * press ESC key to close editor
 
 ![amitaipad-exmaple](https://github.com/user-attachments/assets/4894c7ce-81d3-482a-b4e1-b550692820b0)
+
+
+HOW TO RUN:
+
+'''
+pip install -r requirements.txt
+python main.py
+'''
