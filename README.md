@@ -2,6 +2,8 @@
 Text editor? (work in progress)
 
 ```
+git clone https://github.com/amitaibenshalom/Text-Renderer.git
+cd Text-Renderer
 pip install -r requirements.txt
 python main.py
 ```
